@@ -1,0 +1,256 @@
+@model petmanagement.Models.Pet
+@{
+    ViewData["Title"] = $"Meet {Model.Name}";
+}
+
+<div class="container py-5">
+    <!-- Success Message -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-5">
+        <!-- Pet Image Section -->
+        <div class="col-lg-6">
+            <div class="pet-detail-image">
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <img src="~/@Model.ImagePath" alt="@Model.Name" class="img-fluid rounded-3 shadow-lg">
+                }
+                else
+                {
+                    <div class="pet-placeholder-large d-flex flex-column align-items-center justify-content-center bg-light rounded-3 shadow-lg p-5">
+                        <i class="fas fa-paw fa-4x text-muted"></i>
+                        <p class="mt-3 text-muted">No photo available</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Pet Information Section -->
+        <div class="col-lg-6">
+            <div class="pet-detail-info">
+                <div class="mb-4">
+                    <h1 class="display-4 fw-bold text-primary mb-3">@Model.Name</h1>
+                    <div class="pet-badges mb-3">
+                        <span class="badge bg-primary fs-6 me-2">@Model.Breed</span>
+                        <span class="badge bg-info fs-6 me-2">@Model.Age years old</span>
+                        <span class="badge bg-success fs-6">@Model.Gender</span>
+                    </div>
+                </div>
+
+                <div class="pet-details-card border p-4 rounded-3 shadow-sm">
+                    <h3 class="h4 fw-bold mb-3">
+                        <i class="fas fa-info-circle text-primary me-2"></i>About @Model.Name
+                    </h3>
+                    <p class="lead text-muted mb-4">@Model.Description</p>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="detail-item">
+                                <i class="fas fa-paw text-primary me-2"></i>
+                                <strong>Breed:</strong> @Model.Breed
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="detail-item">
+                                <i class="fas fa-birthday-cake text-primary me-2"></i>
+                                <strong>Age:</strong> @Model.Age years
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="detail-item">
+                                <i class="fas fa-venus-mars text-primary me-2"></i>
+                                <strong>Gender:</strong> @Model.Gender
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="detail-item">
+                                <i class="fas fa-calendar text-primary me-2"></i>
+                                <strong>Available since:</strong> @Model.CreatedDate.ToString("MMM dd, yyyy")
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="adoption-section bg-light p-4 rounded-3">
+                        <div class="adoption-cta">
+                            <h4 class="fw-bold mb-3">Ready to adopt @Model.Name?</h4>
+                            <p class="text-muted mb-4">
+                                @Model.Name is waiting for a loving home. Start your adoption journey today!
+                            </p>
+                            <div class="d-grid gap-2 d-md-flex">
+                                <a asp-controller="Pet" asp-action="Adopt" asp-route-id="@Model.PetID" 
+                                   class="btn btn-primary btn-lg px-4 me-md-2">
+                                    <i class="fas fa-heart me-2"></i>Adopt @Model.Name
+                                </a>
+                                <a asp-controller="Pet" asp-action="Browse" class="btn btn-outline-secondary btn-lg px-4">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to Browse
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Information Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-4">
+                        <i class="fas fa-info-circle text-primary me-2"></i>Additional Information
+                    </h3>
+                    
+                    <div class="row">
+                        <!-- Adoption Process -->
+                        <div class="col-md-4 mb-4">
+                            <div class="bg-light p-4 rounded-3 h-100">
+                                <h5 class="fw-bold mb-3">
+                                    <i class="fas fa-clipboard-list text-primary me-2"></i>Adoption Process
+                                </h5>
+                                <ol class="list-group list-group-numbered">
+                                    <li class="list-group-item border-0 bg-transparent">
+                                        Submit adoption application
+                                    </li>
+                                    <li class="list-group-item border-0 bg-transparent">
+                                        Schedule meet & greet
+                                    </li>
+                                    <li class="list-group-item border-0 bg-transparent">
+                                        Home visit verification
+                                    </li>
+                                    <li class="list-group-item border-0 bg-transparent">
+                                        Finalize adoption paperwork
+                                    </li>
+                                    <li class="list-group-item border-0 bg-transparent">
+                                        Welcome your new family member!
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <!-- Care Requirements -->
+                        <div class="col-md-4 mb-4">
+                            <div class="bg-light p-4 rounded-3 h-100">
+                                <h5 class="fw-bold mb-3">
+                                    <i class="fas fa-heartbeat text-primary me-2"></i>Care Requirements
+                                </h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item border-0 bg-transparent d-flex align-items-center">
+                                        <i class="fas fa-shield-alt text-success me-3"></i>
+                                        <span>Vaccinations up to date</span>
+                                    </li>
+                                    <li class="list-group-item border-0 bg-transparent d-flex align-items-center">
+                                        <i class="fas fa-home text-success me-3"></i>
+                                        <span>Indoor living environment</span>
+                                    </li>
+                                    <li class="list-group-item border-0 bg-transparent d-flex align-items-center">
+                                        <i class="fas fa-utensils text-success me-3"></i>
+                                        <span>High-quality diet (provided)</span>
+                                    </li>
+                                    <li class="list-group-item border-0 bg-transparent d-flex align-items-center">
+                                        <i class="fas fa-walking text-success me-3"></i>
+                                        <span>Daily exercise and playtime</span>
+                                    </li>
+                                    <li class="list-group-item border-0 bg-transparent d-flex align-items-center">
+                                        <i class="fas fa-hand-holding-heart text-success me-3"></i>
+                                        <span>Lots of love and attention</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Information -->
+                        <div class="col-md-4 mb-4">
+                            <div class="bg-light p-4 rounded-3 h-100">
+                                <h5 class="fw-bold mb-3">
+                                    <i class="fas fa-phone-alt text-primary me-2"></i>Have Questions?
+                                </h5>
+                                <p class="mb-4">Contact our adoption specialists:</p>
+                                
+                                <div class="d-flex mb-3">
+                                    <div class="contact-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0">Email</h6>
+                                        <p class="mb-0">adopt@pawshome.com</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex mb-3">
+                                    <div class="contact-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0">Phone</h6>
+                                        <p class="mb-0">(555) 123-4567</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <div class="contact-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0">Hours</h6>
+                                        <p class="mb-0">Mon-Fri: 9am-6pm<br>Sat-Sun: 10am-4pm</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Custom styles for Pet Details page */
+    .pet-detail-image img {
+        width: 100%;
+        height: 450px;
+        object-fit: cover;
+        border: 5px solid white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .pet-badges .badge {
+        padding: 8px 15px;
+        border-radius: 50px;
+        font-weight: 500;
+    }
+    
+    .detail-item {
+        padding: 10px 15px;
+        background-color: rgba(13, 110, 253, 0.05);
+        border-radius: 8px;
+        border-left: 3px solid #0d6efd;
+    }
+    
+    .adoption-section {
+        border-top: 2px dashed #dee2e6;
+        padding-top: 20px;
+        margin-top: 20px;
+    }
+    
+    .contact-icon {
+        flex-shrink: 0;
+    }
+    
+    .pet-details-card {
+        background: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    
+    .list-group-item {
+        padding: 8px 0;
+    }
+</style>

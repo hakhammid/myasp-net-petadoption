@@ -1,0 +1,137 @@
+@model IEnumerable<Pet>
+@{
+    ViewData["Title"] = "Browse Available Pets";
+}
+
+<div class="container-fluid py-5 bg-light">
+    <div class="container">
+        <!-- Page Header -->
+        <div class="row mb-5">
+            <div class="col">
+                <h1 class="display-4 fw-bold text-primary text-center mb-3">Find Your Perfect Pet</h1>
+                <p class="lead text-center text-muted">Browse through our adorable pets waiting for their forever homes</p>
+            </div>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="row mb-4">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <form method="get" class="row g-3">
+                            <div class="col-md-4">
+                                <label for="searchString" class="form-label">
+                                    <i class="fas fa-search me-1"></i>Search by Name or Breed
+                                </label>
+                                <input type="text" class="form-control" id="searchString" name="searchString" 
+                                       value="@ViewBag.SearchString" placeholder="Enter pet name or breed...">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="breed" class="form-label">
+                                    <i class="fas fa-filter me-1"></i>Filter by Breed
+                                </label>
+                                <select class="form-select" id="breed" name="breed">
+                                    <option value="">All Breeds</option>
+                                    @if (ViewBag.Breeds != null)
+                                    {
+                                        @foreach (var breedOption in ViewBag.Breeds)
+                                        {
+                                            <option value="@breedOption" selected="@(breedOption == ViewBag.Breed)">
+                                                @breedOption
+                                            </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="age" class="form-label">
+                                    <i class="fas fa-birthday-cake me-1"></i>Filter by Age
+                                </label>
+                                <select class="form-select" id="age" name="age">
+                                    <option value="">All Ages</option>
+                                    @for (int i = 0; i <= 15; i++)
+                                    {
+                                        <option value="@i" selected="@(i == ViewBag.Age)">@i years</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search me-1"></i>Search
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="row">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var pet in Model)
+                {
+                    <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                        <div class="pet-card h-100">
+                            <div class="pet-image-container">
+                                @if (!string.IsNullOrEmpty(pet.ImagePath))
+                                {
+                                    <img src="~/@pet.ImagePath" alt="@pet.Name" class="pet-image">
+                                }
+                                else
+                                {
+                                    <div class="pet-placeholder">
+                                        <i class="fas fa-paw"></i>
+                                    </div>
+                                }
+                                <div class="pet-overlay">
+                                    <div class="pet-actions">
+                                        <a asp-controller="Pet" asp-action="Details" asp-route-id="@pet.PetID" 
+                                           class="btn btn-primary btn-sm">
+                                            <i class="fas fa-eye me-1"></i>View Details
+                                        </a>
+                                        <a asp-controller="Pet" asp-action="Adopt" asp-route-id="@pet.PetID" 
+                                           class="btn btn-success btn-sm">
+                                            <i class="fas fa-heart me-1"></i>Adopt Me
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pet-info">
+                                <h5 class="pet-name">@pet.Name</h5>
+                                <div class="pet-details mb-2">
+                                    <span class="badge bg-secondary">@pet.Breed</span>
+                                    <span class="badge bg-info">@pet.Age years</span>
+                                    <span class="badge bg-success">@pet.Gender</span>
+                                </div>
+                                <p class="pet-description">
+                                    @(pet.Description.Length > 80 ? pet.Description.Substring(0, 80) + "..." : pet.Description)
+                                </p>
+                                <div class="pet-date">
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        Added @pet.CreatedDate.ToString("MMM dd, yyyy")
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="fas fa-search display-1 text-muted mb-4"></i>
+                        <h3 class="text-muted">No pets found</h3>
+                        <p class="text-muted">Try adjusting your search criteria or check back later for new arrivals.</p>
+                        <a href="/Pet/Browse" class="btn btn-primary">
+                            <i class="fas fa-refresh me-1"></i>Clear Filters
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

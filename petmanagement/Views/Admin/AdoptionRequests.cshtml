@@ -1,0 +1,166 @@
+@model IEnumerable<petmanagement.Models.AdoptionRequest>
+@{
+    ViewData["Title"] = "Adoption Requests";
+}
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-primary">
+            <i class="fas fa-clipboard-list me-2"></i>Adoption Requests
+        </h1>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 fw-bold text-primary">All Adoption Requests</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" 
+                   data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-filter fa-sm fa-fw text-primary"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="#">All Requests</a>
+                    <a class="dropdown-item" href="#">Pending</a>
+                    <a class="dropdown-item" href="#">Approved</a>
+                    <a class="dropdown-item" href="#">Rejected</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="requestsTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Pet</th>
+                            <th>User</th>
+                            <th>Date Requested</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var request in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @if (!string.IsNullOrEmpty(request.Pet.ImagePath))
+                                        {
+                                            <img src="~/@request.Pet.ImagePath" alt="@request.Pet.Name" 
+                                                 class="img-thumbnail me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                        }
+                                        <span>@request.Pet.Name</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>@request.User.Name</div>
+                                    <div class="small text-muted">@request.User.Email</div>
+                                </td>
+                                <td>@request.DateRequested.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    @if (request.Status == "Pending")
+                                    {
+                                        <span class="badge bg-warning">Pending</span>
+                                    }
+                                    else if (request.Status == "Approved")
+                                    {
+                                        <span class="badge bg-success">Approved</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Rejected</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        @if (request.Status == "Pending")
+                                        {
+                                            <form asp-action="UpdateRequestStatus" method="post">
+                                                <input type="hidden" name="requestId" value="@request.RequestID" />
+                                                <input type="hidden" name="status" value="Approved" />
+                                                <button type="submit" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-check"></i> Approve
+                                                </button>
+                                            </form>
+                                            <form asp-action="UpdateRequestStatus" method="post">
+                                                <input type="hidden" name="requestId" value="@request.RequestID" />
+                                                <input type="hidden" name="status" value="Rejected" />
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-times"></i> Reject
+                                                </button>
+                                            </form>
+                                        }
+                                        <a href="#" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#requestDetailsModal-@request.RequestID">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                    
+                                    <!-- Details Modal -->
+                                    <div class="modal fade" id="requestDetailsModal-@request.RequestID" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Adoption Request Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <h6>Pet Information</h6>
+                                                        <div class="d-flex align-items-center">
+                                                            @if (!string.IsNullOrEmpty(request.Pet.ImagePath))
+                                                            {
+                                                                <img src="~/@request.Pet.ImagePath" alt="@request.Pet.Name" 
+                                                                     class="img-thumbnail me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                                                            }
+                                                            <div>
+                                                                <div>@request.Pet.Name</div>
+                                                                <div class="small text-muted">@request.Pet.Breed, @request.Pet.Age year@(request.Pet.Age != 1 ? "s" : "") old</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <h6>User Information</h6>
+                                                        <div><strong>Name:</strong> @request.User.Name</div>
+                                                        <div><strong>Email:</strong> @request.User.Email</div>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <h6>Adoption Message</h6>
+                                                        <p>@request.Message</p>
+                                                    </div>
+                                                    
+                                                    <div class="mb-3">
+                                                        <h6>Request Details</h6>
+                                                        <div><strong>Status:</strong> 
+                                                            @if (request.Status == "Pending")
+                                                            {
+                                                                <span class="badge bg-warning">Pending</span>
+                                                            }
+                                                            else if (request.Status == "Approved")
+                                                            {
+                                                                <span class="badge bg-success">Approved</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge bg-danger">Rejected</span>
+                                                            }
+                                                        </div>
+                                                        <div><strong>Request Date:</strong> @request.DateRequested.ToString("MMM dd, yyyy")</div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
