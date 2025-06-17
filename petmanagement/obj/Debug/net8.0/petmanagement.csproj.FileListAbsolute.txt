@@ -109,3 +109,4 @@ C:\Users\Lenovo Pc\Desktop\Boring\petmanagement\bin\Debug\net8.0\zh-Hans\Microso
 C:\Users\Lenovo Pc\Desktop\Boring\petmanagement\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\Lenovo Pc\Desktop\Boring\petmanagement\obj\Debug\net8.0\petmanagement.csproj.AssemblyReference.cache
 C:\Users\Lenovo Pc\Desktop\Boring\petmanagement\obj\Debug\net8.0\petmanag.51A67839.Up2Date
+C:\Users\Lenovo Pc\Desktop\Boring\petmanagement\obj\Debug\net8.0\petmanagement.sourcelink.json
